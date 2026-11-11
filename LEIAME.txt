@@ -1,0 +1,21 @@
+-Título do Projeto: Guia de Cursos de Extensão e Projetos Acadêmicos (ConectaIF)
+-Equipe: 
+   - Ana Clara Aparecida de Souza
+   - Rafaela Larissa de Faria
+
+-Descrição das funcionalidades:
+O sistema é um portal web front-end para divulgação, busca e submissão de cursos de extensão e projetos acadêmicos. Suas principais funcionalidades incluem:
+
+1. Navegação estruturada por páginas/seções em HTML5 com layout responsivo construído em Bootstrap.
+
+2. Estilização visual personalizada através de arquivo CSS externo.
+
+3. Catálogo interativo com busca em tempo real e filtragem por categorias via manipulação do DOM em JavaScript.
+
+4. Sistema de salvamento de cursos favoritos com persistência de dados no localStorage.
+
+5. Formulário de pré-inscrição e contato com validação em tempo real via JavaScript e mensagens visuais de feedback.
+
+6. Simulação de fluxo de login para perfis diferenciados (aluno/público externo para inscrição e palestrante para cadastro de projetos).
+
+7. Integração com serviço externo (Google Maps) para exibição da localização da instituição.
