@@ -1,0 +1,47 @@
+/* Estilos próprios da equipe: Ana Clara e Rafaela Larissa */
+
+/* Rolagem suave ao clicar nos links do menu e compensação do menu fixo */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 60px;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #212529;
+}
+
+/* Cores institucionais personalizadas */
+.bg-verde {
+    background-color: #14532d !important;
+}
+
+.btn-verde {
+    background-color: #14532d;
+    color: #ffffff;
+}
+
+.btn-verde:hover {
+    background-color: #0f3f22;
+    color: #ffffff;
+}
+
+/* Estilo do banner inicial */
+.bg-banner {
+    background: linear-gradient(135deg, #0f291e, #198754);
+}
+
+/* Tamanho fixo para os slides do carrossel não pularem */
+.carousel-item {
+    min-height: 180px;
+}
+
+/* Efeito nos cards do catálogo */
+.card-custom {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-custom:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
