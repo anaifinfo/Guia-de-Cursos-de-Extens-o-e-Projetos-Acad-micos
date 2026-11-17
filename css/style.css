@@ -1,3 +1,11 @@
+:root {
+    --paleta-1: #0B7285;
+    --paleta-2: #1098AD;
+    --paleta-3: #74C0FC;
+    --paleta-4: #E3FAFC;
+    --paleta-5: #0B2E3C;
+}
+
 /* Estilos próprios da equipe: Ana Clara e Rafaela Larissa */
 
 /* Rolagem suave ao clicar nos links do menu e compensação do menu fixo */
@@ -9,26 +17,29 @@ html {
 body {
     font-family: Arial, Helvetica, sans-serif;
     color: #212529;
+    background-color: #E3FAFC;
 }
 
 /* Cores institucionais personalizadas */
 .bg-verde {
-    background-color: #14532d !important;
+    background-color: var(--paleta-1) !important;
 }
 
 .btn-verde {
-    background-color: #14532d;
+    background-color: var(--paleta-2);
     color: #ffffff;
+    border-color: var(--paleta-2);
 }
 
 .btn-verde:hover {
-    background-color: #0f3f22;
+    background-color: var(--paleta-5);
+    border-color: var(--paleta-5);
     color: #ffffff;
 }
 
 /* Estilo do banner inicial */
 .bg-banner {
-    background: linear-gradient(135deg, #0f291e, #198754);
+    background: linear-gradient(135deg, var(--paleta-5), var(--paleta-2));
 }
 
 /* Tamanho fixo para os slides do carrossel não pularem */
@@ -44,4 +55,20 @@ body {
 .card-custom:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.badge.bg-verde,
+.badge.bg-success {
+    background-color: var(--paleta-1) !important;
+}
+
+.btn-outline-danger {
+    color: var(--paleta-5);
+    border-color: var(--paleta-1);
+}
+
+.btn-outline-danger:hover {
+    background-color: var(--paleta-1);
+    border-color: var(--paleta-1);
+    color: #ffffff;
 }
