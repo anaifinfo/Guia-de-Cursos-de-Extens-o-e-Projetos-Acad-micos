@@ -1,14 +1,11 @@
 :root {
-    --paleta-1: #0B7285;
-    --paleta-2: #1098AD;
-    --paleta-3: #74C0FC;
-    --paleta-4: #E3FAFC;
-    --paleta-5: #0B2E3C;
+    --azul-esverdeado: #0B7285;
+    --azul-medio: #1098AD;
+    --azul-claro: #74C0FC;
+    --azul-pastel: #E3FAFC;
+    --azul-escuro: #0B2E3C;
 }
 
-/* Estilos próprios da equipe: Ana Clara e Rafaela Larissa */
-
-/* Rolagem suave ao clicar nos links do menu e compensação do menu fixo */
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 60px;
@@ -17,58 +14,94 @@ html {
 body {
     font-family: Arial, Helvetica, sans-serif;
     color: #212529;
-    background-color: #E3FAFC;
+    background-color: var(--azul-pastel);
 }
 
-/* Cores institucionais personalizadas */
-.bg-verde {
-    background-color: var(--paleta-1) !important;
+.bg-verde,
+.badge.bg-verde,
+.badge.bg-success {
+    background-color: var(--azul-esverdeado) !important;
 }
 
 .btn-verde {
-    background-color: var(--paleta-2);
-    color: #ffffff;
-    border-color: var(--paleta-2);
+    background-color: var(--azul-medio);
+    border-color: var(--azul-medio);
+    color: #fff;
 }
 
 .btn-verde:hover {
-    background-color: var(--paleta-5);
-    border-color: var(--paleta-5);
-    color: #ffffff;
+    background-color: var(--azul-escuro);
+    border-color: var(--azul-escuro);
+    color: #fff;
 }
 
-/* Estilo do banner inicial */
 .bg-banner {
-    background: linear-gradient(135deg, var(--paleta-5), var(--paleta-2));
+    background: linear-gradient(135deg, var(--azul-escuro), var(--azul-medio));
 }
 
-/* Tamanho fixo para os slides do carrossel não pularem */
+.bg-banner .btn-warning {
+    background-color: var(--azul-claro);
+    border-color: var(--azul-claro);
+    color: var(--azul-escuro);
+    box-shadow: 0 4px 10px rgba(11, 46, 60, 0.25);
+    transition: 0.2s ease;
+}
+
+.bg-banner .btn-warning:hover,
+.bg-banner .btn-warning:focus {
+    background-color: #A5D8FF;
+    border-color: #A5D8FF;
+    color: var(--azul-escuro);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(11, 46, 60, 0.38);
+}
+
 .carousel-item {
     min-height: 180px;
 }
 
-/* Efeito nos cards do catálogo */
 .card-custom {
+    border: 0;
+    box-shadow: 0 10px 18px rgba(11, 46, 60, 0.12);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-custom:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 28px rgba(11, 46, 60, 0.22);
 }
 
-.badge.bg-verde,
-.badge.bg-success {
-    background-color: var(--paleta-1) !important;
+#favoritos {
+    background-color: var(--azul-pastel) !important;
 }
 
-.btn-outline-danger {
-    color: var(--paleta-5);
-    border-color: var(--paleta-1);
+#favoritos .bg-white {
+    border-color: rgba(11, 114, 133, 0.18) !important;
+    box-shadow: 0 4px 12px rgba(11, 46, 60, 0.08);
 }
 
-.btn-outline-danger:hover {
-    background-color: var(--paleta-1);
-    border-color: var(--paleta-1);
-    color: #ffffff;
+.badge {
+    color: #fff !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--azul-claro) !important;
+    color: var(--azul-escuro) !important;
+}
+
+.badge.bg-primary {
+    background-color: var(--azul-medio) !important;
+}
+
+.badge.bg-danger {
+    background-color: #B42318 !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--azul-escuro) !important;
+}
+
+.badge.bg-light {
+    background-color: var(--azul-pastel) !important;
+    color: var(--azul-escuro) !important;
 }
