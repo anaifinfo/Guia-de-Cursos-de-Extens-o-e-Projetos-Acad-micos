@@ -35,6 +35,14 @@ body {
     color: #fff;
 }
 
+.btn-favoritar {
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-favoritar:active {
+    transform: scale(0.96);
+}
+
 .bg-banner {
     background: linear-gradient(135deg, var(--azul-escuro), var(--azul-medio));
 }
@@ -78,6 +86,21 @@ body {
 #favoritos .bg-white {
     border-color: rgba(11, 114, 133, 0.18) !important;
     box-shadow: 0 4px 12px rgba(11, 46, 60, 0.08);
+}
+
+.favorito-item {
+    animation: surgirFavorito 0.25s ease;
+}
+
+@keyframes surgirFavorito {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .badge {

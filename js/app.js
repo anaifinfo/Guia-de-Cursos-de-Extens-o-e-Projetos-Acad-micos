@@ -1,7 +1,24 @@
+const STORAGE_FAVORITOS = "ifmg_cursos_favoritos";
+
 document.addEventListener("DOMContentLoaded", () => {
+    configurarFavoritos();
+    configurarCatalogo();
     configurarFormularioContato();
     configurarFormularioLogin();
 });
+
+function escaparHtml(texto) {
+    const div = document.createElement("div");
+    div.textContent = texto;
+    return div.innerHTML;
+}
+
+function normalizarTexto(texto) {
+    return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
 
 function mostrarMensagem(container, tipo, htmlConteudo) {
     container.className = `alert alert-${tipo} mt-3`;
@@ -39,6 +56,209 @@ function marcarValidoCampo(campo) {
     }
 }
 
+/* ============================================================
+   PRIMEIRA AÇÃO DO FLUXO PRINCIPAL: FAVORITAR / REMOVER CURSOS
+   ============================================================ */
+function configurarFavoritos() {
+    const listaCursos = document.getElementById("lista-cursos");
+    const containerFavoritos = document.getElementById("container-favoritos");
+    const contadorMenu = document.getElementById("contador-favoritos");
+    const totalSecao = document.getElementById("total-favoritos");
+    const feedbackFavoritos = document.getElementById("feedback-favoritos");
+
+    if (!listaCursos || !containerFavoritos) return;
+
+    // Lê os cursos disponíveis diretamente dos cards no DOM
+    const cursosPorId = {};
+    listaCursos.querySelectorAll(".curso-card").forEach((card) => {
+        const id = card.dataset.id;
+        cursosPorId[id] = {
+            id,
+            titulo: card.dataset.titulo,
+            categoriaLabel: card.dataset.categoriaLabel,
+            badge: card.dataset.badge
+        };
+    });
+
+    function carregarFavoritos() {
+        try {
+            const salvo = JSON.parse(localStorage.getItem(STORAGE_FAVORITOS));
+            if (Array.isArray(salvo)) {
+                return salvo.filter((id) => Boolean(cursosPorId[id]));
+            }
+        } catch {
+            // Ignora erro caso o localStorage esteja indisponível ou corrompido
+        }
+        return [];
+    }
+
+    let favoritos = carregarFavoritos();
+
+    function salvarFavoritos() {
+        try {
+            localStorage.setItem(STORAGE_FAVORITOS, JSON.stringify(favoritos));
+        } catch {
+            // Ignora falha de armazenamento em modo restrito
+        }
+    }
+
+    function exibirAvisoFavorito(tipo, texto) {
+        if (!feedbackFavoritos) return;
+        feedbackFavoritos.className = `alert alert-${tipo} py-2`;
+        feedbackFavoritos.textContent = texto;
+        feedbackFavoritos.classList.remove("d-none");
+    }
+
+    function atualizarBotoesCatalogo() {
+        listaCursos.querySelectorAll(".btn-favoritar").forEach((botao) => {
+            const estaFavoritado = favoritos.includes(botao.dataset.id);
+            botao.classList.toggle("btn-danger", estaFavoritado);
+            botao.classList.toggle("btn-outline-danger", !estaFavoritado);
+            botao.setAttribute("aria-pressed", String(estaFavoritado));
+            botao.textContent = estaFavoritado ? "✔ Favoritado" : "❤ Favoritar";
+        });
+    }
+
+    function renderizarFavoritos() {
+        if (contadorMenu) contadorMenu.textContent = String(favoritos.length);
+        if (totalSecao) totalSecao.textContent = String(favoritos.length);
+
+        atualizarBotoesCatalogo();
+        containerFavoritos.innerHTML = "";
+
+        if (favoritos.length === 0) {
+            const colVazio = document.createElement("div");
+            colVazio.className = "col-12";
+            colVazio.innerHTML = `
+                <div class="p-3 bg-white border rounded text-muted text-center">
+                    Nenhum curso favoritado ainda. Clique em <strong>❤ Favoritar</strong> no catálogo acima para adicionar.
+                </div>
+            `;
+            containerFavoritos.appendChild(colVazio);
+            return;
+        }
+
+        favoritos.forEach((id) => {
+            const curso = cursosPorId[id];
+            if (!curso) return;
+
+            const coluna = document.createElement("div");
+            coluna.className = "col-md-6 favorito-item";
+
+            const cardItem = document.createElement("div");
+            cardItem.className = "p-3 bg-white border rounded d-flex justify-content-between align-items-center gap-2";
+
+            const info = document.createElement("div");
+
+            const titulo = document.createElement("strong");
+            titulo.textContent = curso.titulo;
+
+            const badge = document.createElement("span");
+            badge.className = `badge ${curso.badge} ms-2`;
+            badge.textContent = curso.categoriaLabel;
+
+            info.appendChild(titulo);
+            info.appendChild(badge);
+
+            const btnRemover = document.createElement("button");
+            btnRemover.type = "button";
+            btnRemover.className = "btn btn-sm btn-danger btn-remover-favorito";
+            btnRemover.dataset.id = curso.id;
+            btnRemover.textContent = "Remover";
+
+            cardItem.appendChild(info);
+            cardItem.appendChild(btnRemover);
+            coluna.appendChild(cardItem);
+            containerFavoritos.appendChild(coluna);
+        });
+    }
+
+    function alternarFavorito(id) {
+        const curso = cursosPorId[id];
+        if (!curso) return;
+
+        const indice = favoritos.indexOf(id);
+        if (indice === -1) {
+            favoritos.push(id);
+            exibirAvisoFavorito("success", `"${curso.titulo}" foi adicionado aos seus favoritos.`);
+        } else {
+            favoritos.splice(indice, 1);
+            exibirAvisoFavorito("warning", `"${curso.titulo}" foi removido dos seus favoritos.`);
+        }
+
+        salvarFavoritos();
+        renderizarFavoritos();
+    }
+
+    // Delegação de evento para os botões "Favoritar" do catálogo
+    listaCursos.addEventListener("click", (event) => {
+        const botao = event.target.closest(".btn-favoritar");
+        if (!botao) return;
+        alternarFavorito(botao.dataset.id);
+    });
+
+    // Delegação de evento para os botões "Remover" em Meus Favoritos
+    containerFavoritos.addEventListener("click", (event) => {
+        const botao = event.target.closest(".btn-remover-favorito");
+        if (!botao) return;
+        alternarFavorito(botao.dataset.id);
+    });
+
+    renderizarFavoritos();
+}
+
+/* ============================================================
+   CATÁLOGO: BUSCA, FILTRO E ATALHO PARA INSCRIÇÃO
+   ============================================================ */
+function configurarCatalogo() {
+    const campoBusca = document.getElementById("campo-busca");
+    const filtroCategoria = document.getElementById("filtro-categoria");
+    const listaCursos = document.getElementById("lista-cursos");
+    const msgSemCursos = document.getElementById("msg-sem-cursos");
+    const campoCurso = document.getElementById("curso");
+
+    if (!listaCursos) return;
+
+    const cards = Array.from(listaCursos.querySelectorAll(".curso-card"));
+
+    function filtrarCursos() {
+        const termo = normalizarTexto(campoBusca ? campoBusca.value.trim() : "");
+        const categoria = filtroCategoria ? filtroCategoria.value : "todos";
+        let visiveis = 0;
+
+        cards.forEach((card) => {
+            const textoCard = normalizarTexto(card.textContent);
+            const categoriaCard = card.dataset.categoria;
+
+            const combinaTexto = !termo || textoCard.includes(termo);
+            const combinaCategoria = categoria === "todos" || categoriaCard === categoria;
+            const mostrar = combinaTexto && combinaCategoria;
+
+            card.classList.toggle("d-none", !mostrar);
+            if (mostrar) visiveis++;
+        });
+
+        if (msgSemCursos) {
+            msgSemCursos.classList.toggle("d-none", visiveis > 0);
+        }
+    }
+
+    if (campoBusca) campoBusca.addEventListener("input", filtrarCursos);
+    if (filtroCategoria) filtroCategoria.addEventListener("change", filtrarCursos);
+
+    // Pré-seleciona o curso no formulário ao clicar em "Inscrever" no card
+    listaCursos.addEventListener("click", (event) => {
+        const botaoInscrever = event.target.closest(".btn-inscrever");
+        if (!botaoInscrever || !campoCurso) return;
+
+        campoCurso.value = botaoInscrever.dataset.curso;
+        campoCurso.dispatchEvent(new Event("change"));
+    });
+}
+
+/* ============================================================
+   VALIDAÇÕES E FORMULÁRIOS (PRÉ-INSCRIÇÃO E LOGIN)
+   ============================================================ */
 function validarEmail(valor) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor.trim());
 }
@@ -54,12 +274,10 @@ function validarCpfOuEmail(valor) {
         return false;
     }
 
-    // Rejeita sequências repetidas (ex.: 00000000000, 11111111111)
     if (/^(\d)\1{10}$/.test(apenasDigitos)) {
         return false;
     }
 
-    // Cálculo dos dois dígitos verificadores do CPF
     let soma = 0;
     for (let i = 0; i < 9; i++) {
         soma += Number(apenasDigitos[i]) * (10 - i);
@@ -129,7 +347,6 @@ function configurarFormularioContato() {
         return true;
     }
 
-    // Validação em tempo real enquanto o usuário digita/altera
     campoNome.addEventListener("input", validarNome);
     campoEmail.addEventListener("input", validarCampoEmail);
     campoCurso.addEventListener("change", validarCurso);
@@ -150,9 +367,9 @@ function configurarFormularioContato() {
             return;
         }
 
-        const nomeFormatado = campoNome.value.trim();
-        const emailFormatado = campoEmail.value.trim();
-        const nomeCurso = nomesCursos[campoCurso.value] || campoCurso.value;
+        const nomeFormatado = escaparHtml(campoNome.value.trim());
+        const emailFormatado = escaparHtml(campoEmail.value.trim());
+        const nomeCurso = escaparHtml(nomesCursos[campoCurso.value] || campoCurso.value);
 
         mostrarMensagem(
             feedbackGeral,
@@ -177,7 +394,6 @@ function configurarFormularioLogin() {
     const campoPerfil = document.getElementById("perfil");
     const campoUsuario = document.getElementById("usuario");
 
-    // Cria área de retorno logo abaixo do formulário de login
     const retornoLogin = document.createElement("div");
     retornoLogin.id = "msg-login";
     retornoLogin.className = "alert d-none mt-3";
@@ -217,7 +433,7 @@ function configurarFormularioLogin() {
         }
 
         const perfilValor = campoPerfil.value;
-        const usuarioValor = campoUsuario.value.trim();
+        const usuarioValor = escaparHtml(campoUsuario.value.trim());
 
         if (perfilValor === "palestrante") {
             mostrarMensagem(
