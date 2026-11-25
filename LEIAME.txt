@@ -21,3 +21,19 @@ O sistema é um portal web front-end para divulgação, busca e submissão de cu
 7. Integração com serviço externo (Google Maps) para exibição da localização da instituição.
 
 8. "tabela" de favoritos.
+
+
+COMO EXECUTAR
+
+1. Extraia o arquivo ZIP mantendo todas as pastas (css, js e img).
+2. Abra o arquivo "index.html" em qualquer navegador moderno (Chrome, Firefox ou Edge).
+
+COMO TESTAR A "NOVA" FUNCIONALIDADE 
+
+1. Acesse a seção "Catálogo de Cursos".
+2. Clique no botão "❤ Favoritar" em um ou mais cursos (ex.: "Programação em C" e "Preparatório IFMG").
+   - Resultado esperado: o botão muda para "✔ Favoritado", os contadores de favoritos (no menu superior e na seção "Meus Favoritos") são atualizados e os cursos aparecem dinamicamente na seção "Meus Favoritos" com mensagem de confirmação.
+3. Na seção "Meus Favoritos", clique em "Remover" em um dos cursos adicionados.
+   - Resultado esperado: o curso é removido da lista na tela, o botão correspondente no catálogo volta para "❤ Favoritar" e o contador é decrementado.
+4. Recarregue a página (F5) com pelo menos um curso favoritado.
+   - Resultado esperado: os cursos favoritos permanecem salvos na interface via localStorage.
