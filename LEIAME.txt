@@ -19,3 +19,5 @@ O sistema é um portal web front-end para divulgação, busca e submissão de cu
 6. Simulação de fluxo de login para perfis diferenciados (aluno/público externo para inscrição e palestrante para cadastro de projetos).
 
 7. Integração com serviço externo (Google Maps) para exibição da localização da instituição.
+
+8. "tabela" de favoritos.
